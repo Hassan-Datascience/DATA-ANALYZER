@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cyber-Emerald Terminal Upload - Data Quality Analyzer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "cyber-bg": "#050805",
+                        "spring-green": "#00FF66",
+                        "emerald-dark": "#0A2010",
+                        "glass-white": "rgba(255, 255, 255, 0.03)",
+                        "glass-green": "rgba(0, 255, 102, 0.05)",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    }
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --cyber-glow: 0 0 15px rgba(0, 255, 102, 0.4);
+            --neon-glow: 0 0 10px rgba(0, 255, 102, 0.6);
+            --glass-border: rgba(0, 255, 102, 0.15);
+        }
+        body { 
+            background-color: #050805;
+            color: #E0E0E0;
+        }
+        .sidebar-glass {
+            background: rgba(10, 32, 16, 0.6);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-right: 1px solid var(--glass-border);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+        .upload-zone-neon {
+            background: rgba(0, 255, 102, 0.02);
+            border: 1px dashed #00FF66;
+            box-shadow: inset 0 0 20px rgba(0, 255, 102, 0.05), 0 0 15px rgba(0, 255, 102, 0.1);
+        }
+        .neon-progress {
+            box-shadow: 0 0 12px #00FF66;
+            background: #00FF66;
+        }
+        .status-glow-success {
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+        }
+        .status-glow-critical {
+            box-shadow: 0 0 8px rgba(255, 50, 50, 0.4);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 102, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans selection:bg-spring-green/30 overflow-hidden">
+<div class="flex h-screen">
+<aside class="w-64 sidebar-glass flex flex-col z-20">
+<div class="p-8">
+<div class="flex items-center gap-3 mb-10">
+<div class="w-8 h-8 bg-spring-green rounded-sm flex items-center justify-center shadow-[0_0_20px_rgba(0,255,102,0.4)]">
+<span class="material-symbols-outlined text-cyber-bg text-xl font-bold">terminal</span>
+</div>
+<h1 class="text-sm font-bold tracking-tighter text-white uppercase font-mono">Cyber.Emerald</h1>
+</div>
+<nav class="space-y-2">
+<a class="flex items-center gap-3 px-4 py-2.5 text-spring-green bg-spring-green/10 rounded border border-spring-green/20 shadow-[0_0_10px_rgba(0,255,102,0.1)] text-xs font-bold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined text-xl">upload_file</span>
+                    Upload
+                </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-spring-green/50 hover:text-spring-green hover:bg-spring-green/5 rounded text-xs font-bold uppercase tracking-widest transition-all" href="#">
+<span class="material-symbols-outlined text-xl">insights</span>
+                    Metrics
+                </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-spring-green/50 hover:text-spring-green hover:bg-spring-green/5 rounded text-xs font-bold uppercase tracking-widest transition-all" href="#">
+<span class="material-symbols-outlined text-xl">folder_managed</span>
+                    Storage
+                </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-spring-green/50 hover:text-spring-green hover:bg-spring-green/5 rounded text-xs font-bold uppercase tracking-widest transition-all" href="#">
+<span class="material-symbols-outlined text-xl">settings_input_component</span>
+                    Nodes
+                </a>
+</nav>
+</div>
+<div class="mt-auto p-6 border-t border-spring-green/10">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-emerald-dark border border-spring-green/30 flex items-center justify-center text-xs text-spring-green font-mono">JD-9</div>
+<div class="overflow-hidden">
+<p class="text-[11px] font-bold text-white truncate font-mono">OPERATOR_DALTON</p>
+<p class="text-[9px] text-spring-green/40 uppercase tracking-[0.2em]">Auth: Level 4</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto custom-scrollbar px-12 py-12 bg-[radial-gradient(circle_at_50%_50%,_rgba(0,255,102,0.03)_0%,_transparent_60%)]">
+<header class="flex justify-between items-start mb-16">
+<div>
+<h2 class="text-3xl font-bold text-white tracking-tighter mb-2 font-mono flex items-center gap-3">
+<span class="w-2 h-8 bg-spring-green"></span>
+                    Terminal_Upload.v2
+                </h2>
+<p class="text-spring-green/40 text-xs font-mono uppercase tracking-widest">Enterprise Neural Data Quality Analyzer // Cyber-Emerald Cluster</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 glass-card rounded flex items-center justify-center text-spring-green hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="h-10 w-[1px] bg-spring-green/20"></div>
+<button class="glass-card px-5 py-2 rounded text-[10px] font-bold text-spring-green transition-all uppercase tracking-[0.2em] hover:bg-spring-green/10">
+                    System_Docs
+                </button>
+</div>
+</header>
+<div class="grid grid-cols-12 gap-12">
+<div class="col-span-12 lg:col-span-8 space-y-12">
+<div class="relative group">
+<div class="upload-zone-neon rounded-xl h-[400px] flex flex-col items-center justify-center transition-all duration-500 hover:border-spring-green hover:shadow-[0_0_30px_rgba(0,255,102,0.15)] cursor-pointer">
+<div class="w-16 h-16 rounded-sm border border-spring-green/40 bg-spring-green/5 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-spring-green/10 transition-all shadow-[0_0_20px_rgba(0,255,102,0.1)]">
+<span class="material-symbols-outlined text-spring-green text-3xl">add_box</span>
+</div>
+<h3 class="text-white text-xl font-mono mb-2 uppercase tracking-tighter">Initialize Data Stream</h3>
+<p class="text-spring-green/40 text-xs font-mono uppercase tracking-widest">Input: PARQUET, CSV, XLSX | Limit: 100MB</p>
+</div>
+</div>
+<div class="glass-card p-8 rounded-xl border-l-4 border-l-spring-green">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-spring-green animate-pulse text-xl">settings_ethernet</span>
+<div>
+<span class="text-white font-mono text-xs block">SYS_PROCESS: security_logs_october.csv</span>
+<span class="text-spring-green/40 text-[10px] uppercase font-mono tracking-widest">Validating Schema Integrity...</span>
+</div>
+</div>
+<span class="text-spring-green font-mono font-bold text-lg shadow-[0_0_10px_rgba(0,255,102,0.2)]">74%</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="neon-progress h-full rounded-full transition-all duration-1000" style="width: 74%"></div>
+</div>
+<div class="flex gap-10 mt-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-spring-green text-sm">check_circle</span>
+<span class="text-spring-green/60 text-[10px] font-mono uppercase tracking-widest">Mapping</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-spring-green text-sm">check_circle</span>
+<span class="text-spring-green/60 text-[10px] font-mono uppercase tracking-widest">PII_Mask</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-spring-green animate-pulse shadow-[0_0_8px_#00FF66]"></div>
+<span class="text-white text-[10px] font-mono uppercase tracking-widest">Structure</span>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-[10px] font-bold uppercase tracking-[0.3em] text-spring-green/50 font-mono">Audit_Log_History</h3>
+<button class="text-[10px] text-spring-green font-bold uppercase tracking-widest hover:text-white transition-colors">Access_All</button>
+</div>
+<div class="space-y-3">
+<div class="glass-card p-4 rounded flex items-center justify-between hover:bg-spring-green/5 transition-all border-l-2 border-l-spring-green">
+<div class="flex flex-col">
+<span class="text-white text-xs font-mono truncate max-w-[140px]">enc_v1.csv</span>
+<span class="text-spring-green/30 text-[9px] mt-1 font-mono uppercase">T-08m // 4.2MB</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="bg-spring-green/10 text-spring-green text-[9px] font-bold px-2 py-0.5 rounded status-glow-success uppercase tracking-widest">Pass</div>
+<div class="text-white font-mono text-xs">99.8%</div>
+</div>
+</div>
+<div class="glass-card p-4 rounded flex items-center justify-between hover:bg-white/5 transition-all border-l-2 border-l-white/10">
+<div class="flex flex-col">
+<span class="text-white text-xs font-mono truncate max-w-[140px]">archives.xlsx</span>
+<span class="text-spring-green/30 text-[9px] mt-1 font-mono uppercase">T-01h // 12.5MB</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="bg-white/5 text-white/50 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">Review</div>
+<div class="text-white font-mono text-xs">82.1%</div>
+</div>
+</div>
+<div class="glass-card p-4 rounded flex items-center justify-between hover:bg-spring-green/5 transition-all border-l-2 border-l-spring-green">
+<div class="flex flex-col">
+<span class="text-white text-xs font-mono truncate max-w-[140px]">sync_third.json</span>
+<span class="text-spring-green/30 text-[9px] mt-1 font-mono uppercase">T-24h // 1.8MB</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="bg-spring-green/10 text-spring-green text-[9px] font-bold px-2 py-0.5 rounded status-glow-success uppercase tracking-widest">Pass</div>
+<div class="text-white font-mono text-xs">94.0%</div>
+</div>
+</div>
+<div class="glass-card p-4 rounded flex items-center justify-between hover:bg-red-500/5 transition-all border-l-2 border-l-red-500">
+<div class="flex flex-col">
+<span class="text-white text-xs font-mono truncate max-w-[140px]">leads_raw.csv</span>
+<span class="text-spring-green/30 text-[9px] mt-1 font-mono uppercase">T-48h // 8.4MB</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="bg-red-500/10 text-red-500 text-[9px] font-bold px-2 py-0.5 rounded status-glow-critical uppercase tracking-widest">Alert</div>
+<div class="text-red-500 font-mono text-xs">41.5%</div>
+</div>
+</div>
+</div>
+<div class="mt-8 p-6 glass-card rounded-xl border-t border-t-spring-green/30 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-16 h-16 bg-spring-green/5 rotate-45 translate-x-8 -translate-y-8"></div>
+<h4 class="text-spring-green text-[10px] font-bold uppercase tracking-[0.2em] mb-4 flex items-center gap-2 font-mono">
+<span class="material-symbols-outlined text-sm">terminal</span>
+                        Neural_Insight
+                    </h4>
+<p class="text-spring-green/60 text-[10px] font-mono leading-relaxed uppercase">
+                        Stream analysis indicates <span class="text-white">Optimal Schema Alignment</span> in recent clusters. Throughput is <span class="text-spring-green">14% above nominal baseline</span>.
+                    </p>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

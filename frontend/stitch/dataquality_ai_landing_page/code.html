@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cyber-Emerald | Enterprise Data Quality Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "cyber-black": "#050805",
+                "spring-green": "#00FF88",
+                "emerald-glow": "#008F5A",
+              },
+              fontFamily: {
+                "sans": ["Space Grotesk", "sans-serif"]
+              }
+            },
+          },
+        }
+      </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body { 
+                font-family: 'Space Grotesk', sans-serif;
+                background-color: #050805;
+                color: #FFFFFF;
+                @apply tracking-widest;
+            }
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+        .cyber-button {
+            background-color: #00FF88;
+            color: #050805;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+        }
+        .cyber-button:hover {
+            box-shadow: 0 0 35px rgba(0, 255, 136, 0.6);
+            transform: translateY(-2px);
+        }
+        .neon-accent {
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        .emerald-gradient-bg {
+            background: radial-gradient(circle at 50% -20%, rgba(0, 255, 136, 0.15) 0%, transparent 60%),
+                        radial-gradient(circle at 0% 100%, rgba(0, 143, 90, 0.1) 0%, transparent 40%);
+        }
+        .command-card {
+            @apply glass-panel transition-all duration-500 hover:scale-[1.02] hover:border-spring-green/50;
+        }
+        .data-grid {
+            background-image: linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-cyber-black text-white selection:bg-spring-green/30 min-h-screen">
+<nav class="fixed top-0 w-full z-50 py-6">
+<div class="max-w-7xl mx-auto px-8">
+<div class="glass-panel px-8 py-4 flex justify-between items-center rounded-2xl">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 bg-spring-green flex items-center justify-center rounded-sm rotate-45">
+<span class="material-symbols-outlined text-cyber-black -rotate-45 text-xl font-bold">radar</span>
+</div>
+<span class="text-lg font-bold tracking-[0.4em] uppercase">Cyber-Emerald</span>
+</div>
+<div class="hidden md:flex items-center space-x-10">
+<a class="text-xs font-bold text-white/70 hover:text-spring-green transition-colors uppercase tracking-widest" href="#">Protocols</a>
+<a class="text-xs font-bold text-white/70 hover:text-spring-green transition-colors uppercase tracking-widest" href="#">Core-Node</a>
+<a class="text-xs font-bold text-white/70 hover:text-spring-green transition-colors uppercase tracking-widest" href="#">Satellite</a>
+<div class="h-4 w-px bg-white/20"></div>
+<button class="cyber-button px-8 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] rounded-md">
+                    Access System
+                </button>
+</div>
+</div>
+</div>
+</nav>
+<section class="relative pt-48 pb-32 overflow-hidden emerald-gradient-bg min-h-screen flex items-center">
+<div class="data-grid absolute inset-0 z-0"></div>
+<div class="max-w-7xl mx-auto px-8 relative z-10 grid lg:grid-cols-2 gap-20 items-center">
+<div class="space-y-10">
+<div class="inline-flex items-center gap-3 px-4 py-1 glass-panel border-spring-green/20 rounded-full">
+<span class="w-2 h-2 rounded-full bg-spring-green shadow-[0_0_8px_#00FF88] animate-pulse"></span>
+<span class="text-[10px] font-black tracking-[0.4em] text-spring-green uppercase">System Online: v9.4.1</span>
+</div>
+<h1 class="text-7xl xl:text-8xl font-black uppercase leading-[0.9] tracking-tighter">
+                Cybernetic <span class="text-spring-green neon-accent">Data</span> <br/>Intelligence.
+            </h1>
+<p class="max-w-xl text-lg text-white/50 leading-relaxed font-light tracking-wide">
+                Secure the foundation of your digital empire. Next-generation SaaS analyzer utilizing emerald-light processing to detect structural drift in real-time.
+            </p>
+<div class="flex flex-col sm:flex-row items-center gap-8">
+<button class="cyber-button w-full sm:w-auto px-12 py-5 text-[12px] font-black uppercase tracking-[0.2em] rounded-lg">
+                    Initialize Diagnostic
+                </button>
+<button class="text-white/40 hover:text-spring-green text-[12px] font-bold transition-colors flex items-center gap-3 uppercase tracking-widest group">
+                    View Network Architecture <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="relative hidden lg:block">
+<div class="command-card p-8 rounded-3xl relative z-20">
+<div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+<div class="w-3 h-3 rounded-full bg-spring-green/50"></div>
+<div class="w-3 h-3 rounded-full bg-blue-500/50"></div>
+</div>
+<span class="text-[10px] font-mono text-spring-green tracking-widest uppercase">Command Center Alpha</span>
+</div>
+<div class="space-y-6">
+<div class="h-48 bg-cyber-black/50 border border-white/10 rounded-xl overflow-hidden relative">
+<img alt="Data Visualization" class="w-full h-full object-cover mix-blend-screen opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlLY6RqeTZs_zL5SUN8UbrQbbQgGFduoYK_NCiaGvdD7ZLTMcOiIlft2DIOMxbDc4JnfzpyZFVj6dKeClQHUel_8Tc6rm2aEQ1lYosEILaN-E8Bg5Nu39cfIROGsPM7U87wCR77rh_F-QOMOCEotpVUEvkWNsOiXrFrRCP4v22tFgnIkvYGtNFa7A-eKdT_LjtdLV3GvHql5N_ZWyGg7F-JqhgFR9gF0jJVuMCkac3ezZBR0JAVOET4AQRDMHO05Auc2pXXkWfzpQ_"/>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between">
+<div class="h-2 w-1/3 bg-spring-green/20 rounded-full"></div>
+<div class="h-2 w-1/4 bg-spring-green/40 rounded-full"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-white/5 rounded-xl border border-white/10">
+<div class="text-[9px] text-white/40 uppercase mb-1">Integrity Rate</div>
+<div class="text-xl font-bold text-spring-green">99.98%</div>
+</div>
+<div class="p-4 bg-white/5 rounded-xl border border-white/10">
+<div class="text-[9px] text-white/40 uppercase mb-1">Active Nodes</div>
+<div class="text-xl font-bold text-white tracking-widest">14,209</div>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute -top-10 -right-10 w-64 h-64 bg-spring-green/10 blur-[100px] -z-10"></div>
+<div class="absolute -bottom-20 -left-20 w-80 h-80 bg-emerald-glow/20 blur-[120px] -z-10"></div>
+</div>
+</div>
+</section>
+<section class="py-32 relative">
+<div class="max-w-7xl mx-auto px-8">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="command-card p-10 rounded-2xl group">
+<div class="w-14 h-14 glass-panel border-spring-green/30 flex items-center justify-center rounded-xl mb-10 group-hover:bg-spring-green group-hover:text-cyber-black transition-all">
+<span class="material-symbols-outlined text-[32px]">security</span>
+</div>
+<h3 class="text-2xl font-bold mb-4 tracking-tight uppercase">Ironclad Vault</h3>
+<p class="text-white/40 text-sm leading-relaxed font-light">Military-grade encryption for enterprise-scale data assets. Zero-trust architecture baked into every scan.</p>
+</div>
+<div class="command-card p-10 rounded-2xl group">
+<div class="w-14 h-14 glass-panel border-spring-green/30 flex items-center justify-center rounded-xl mb-10 group-hover:bg-spring-green group-hover:text-cyber-black transition-all">
+<span class="material-symbols-outlined text-[32px]">hub</span>
+</div>
+<h3 class="text-2xl font-bold mb-4 tracking-tight uppercase">Synapse Mesh</h3>
+<p class="text-white/40 text-sm leading-relaxed font-light">Self-healing data pipelines that route around corruption before your stakeholders even notice the latency.</p>
+</div>
+<div class="command-card p-10 rounded-2xl group">
+<div class="w-14 h-14 glass-panel border-spring-green/30 flex items-center justify-center rounded-xl mb-10 group-hover:bg-spring-green group-hover:text-cyber-black transition-all">
+<span class="material-symbols-outlined text-[32px]">speed</span>
+</div>
+<h3 class="text-2xl font-bold mb-4 tracking-tight uppercase">Warp Speed Scan</h3>
+<p class="text-white/40 text-sm leading-relaxed font-light">Process petabytes in milliseconds. Our emerald-laser technology redefined the concept of "real-time" analytics.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-32 bg-cyber-black/50 relative overflow-hidden border-y border-white/10">
+<div class="max-w-7xl mx-auto px-8 relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="relative">
+<div class="command-card p-1 rounded-3xl">
+<div class="bg-cyber-black rounded-[22px] overflow-hidden aspect-video relative">
+<img alt="System Monitoring" class="w-full h-full object-cover opacity-30 mix-blend-screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlLY6RqeTZs_zL5SUN8UbrQbbQgGFduoYK_NCiaGvdD7ZLTMcOiIlft2DIOMxbDc4JnfzpyZFVj6dKeClQHUel_8Tc6rm2aEQ1lYosEILaN-E8Bg5Nu39cfIROGsPM7U87wCR77rh_F-QOMOCEotpVUEvkWNsOiXrFrRCP4v22tFgnIkvYGtNFa7A-eKdT_LjtdLV3GvHql5N_ZWyGg7F-JqhgFR9gF0jJVuMCkac3ezZBR0JAVOET4AQRDMHO05Auc2pXXkWfzpQ_"/>
+<div class="absolute inset-0 p-8 flex flex-col justify-between">
+<div class="flex justify-between">
+<div class="space-y-1">
+<div class="h-1 w-20 bg-spring-green"></div>
+<div class="text-[8px] font-mono text-white/50 tracking-tighter uppercase">Signal Monitor 01</div>
+</div>
+<div class="text-xs font-mono text-spring-green">ACTIVE_SYNC</div>
+</div>
+<div class="h-32 flex items-end gap-1">
+<div class="flex-1 bg-spring-green/20 h-12"></div>
+<div class="flex-1 bg-spring-green/40 h-24"></div>
+<div class="flex-1 bg-spring-green/60 h-16"></div>
+<div class="flex-1 bg-spring-green/30 h-32"></div>
+<div class="flex-1 bg-spring-green/50 h-20"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute -top-6 -left-6 glass-panel p-4 rounded-xl border-spring-green/30">
+<span class="text-[10px] font-black uppercase text-spring-green">Quantum Leakage Found</span>
+</div>
+</div>
+<div class="space-y-12">
+<h2 class="text-5xl font-black uppercase tracking-tighter leading-none">Global Quality <br/><span class="text-spring-green">Domination.</span></h2>
+<div class="space-y-8">
+<div class="flex gap-8 group">
+<div class="text-spring-green font-mono text-xl pt-1">/01</div>
+<div>
+<h4 class="text-xl font-bold uppercase mb-2 tracking-wide group-hover:text-spring-green transition-colors">Neural Mapping</h4>
+<p class="text-white/40 font-light leading-relaxed">Map your entire data lineage with AI-driven discovery nodes that identify dark data repositories automatically.</p>
+</div>
+</div>
+<div class="flex gap-8 group">
+<div class="text-spring-green font-mono text-xl pt-1">/02</div>
+<div>
+<h4 class="text-xl font-bold uppercase mb-2 tracking-wide group-hover:text-spring-green transition-colors">Auto-Remediation</h4>
+<p class="text-white/40 font-light leading-relaxed">Fix corrupted records at the source with zero manual intervention using our patented Cyber-Emerald healing scripts.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-40">
+<div class="max-w-7xl mx-auto px-8">
+<div class="glass-panel p-24 text-center rounded-[40px] relative overflow-hidden group">
+<div class="absolute inset-0 bg-spring-green/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-spring-green/50 to-transparent"></div>
+<h2 class="text-7xl font-black uppercase tracking-tighter mb-10 relative z-10">Ascend Your <span class="text-spring-green">Stack.</span></h2>
+<p class="text-white/40 text-lg mb-14 max-w-xl mx-auto font-light tracking-wide relative z-10 uppercase">
+                Deploy the cyber-emerald framework in under 15 minutes.
+            </p>
+<div class="relative z-10">
+<button class="cyber-button px-20 py-6 text-[14px] font-black uppercase tracking-[0.3em] rounded-xl">
+                    Deploy Core Node
+                </button>
+</div>
+</div>
+</div>
+</section>
+<footer class="py-24 bg-cyber-black border-t border-white/10 relative overflow-hidden">
+<div class="max-w-7xl mx-auto px-8 relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-20">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-6 h-6 bg-spring-green flex items-center justify-center rounded-sm rotate-45">
+<span class="material-symbols-outlined text-cyber-black -rotate-45 text-sm font-bold">radar</span>
+</div>
+<span class="text-sm font-black tracking-[0.3em] uppercase">Cyber-Emerald</span>
+</div>
+<p class="text-[10px] text-white/30 uppercase tracking-[0.2em] leading-loose">
+                    Defining the next epoch of data quality and enterprise architectural integrity for the cybernetic age.
+                </p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 col-span-1 md:col-span-3 gap-12">
+<div class="space-y-6">
+<h5 class="text-[11px] font-black text-spring-green uppercase tracking-[0.3em]">Network</h5>
+<ul class="space-y-4 text-[11px] font-bold text-white/40 uppercase tracking-widest">
+<li><a class="hover:text-spring-green transition-colors" href="#">System Grid</a></li>
+<li><a class="hover:text-spring-green transition-colors" href="#">Edge Hub</a></li>
+<li><a class="hover:text-spring-green transition-colors" href="#">Secure Vault</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h5 class="text-[11px] font-black text-spring-green uppercase tracking-[0.3em]">Directives</h5>
+<ul class="space-y-4 text-[11px] font-bold text-white/40 uppercase tracking-widest">
+<li><a class="hover:text-spring-green transition-colors" href="#">API Layer</a></li>
+<li><a class="hover:text-spring-green transition-colors" href="#">Sec-Ops</a></li>
+<li><a class="hover:text-spring-green transition-colors" href="#">Legal Core</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h5 class="text-[11px] font-black text-spring-green uppercase tracking-[0.3em]">Terminal</h5>
+<div class="flex gap-4">
+<a class="w-10 h-10 glass-panel flex items-center justify-center rounded-lg hover:bg-spring-green group transition-all" href="#">
+<img alt="Terminal" class="w-5 h-5 brightness-0 invert opacity-40 group-hover:invert-0 group-hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABuEP8uBSXGiewobeh09UEm7xTqzjDzsfC53Jd2vM1-0NoKxrZlZffIysQoHUmk6oikzPXqAM0_qWqGo2HER6oay3E6oEarejNHrt8Ru4tUaGAA5cbAWHp5cCWW91l7UvlwcFPHwB-I87w5BbMSubq20qWmZ9ES3elkPFlm33RGjr9es8qD80ed0gG54AkOT6BD4UCuIQyvr7fzeLVAqpqZxAhH8jepu6HKofgHKkGjtx5c3wcS2cg2Y5QnQWU7fcek5ZOcQzURBdy"/>
+</a>
+<a class="w-10 h-10 glass-panel flex items-center justify-center rounded-lg hover:bg-spring-green group transition-all" href="#">
+<img alt="Secure" class="w-5 h-5 brightness-0 invert opacity-40 group-hover:invert-0 group-hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArZcgDyR43HDqbmfYnip23LHvU_qttUX5JUUa66to7RL4lFotJb0_00jvD8gabOwXoDQrLl11MkYbnC--17BAEXz94w-r0rdVvKHKfIgKxjj0E-0l4lK5fn7bUDlh2vFKSn3b6jOxjhuDL3Hbdkh3ufEcd5zjMvaby4_PKIpcUPnpJ6Vpk3oQWvzYZGSRxJn4S1SkeFIBiDrhy-4OPiPD7UvEnjQEQrf41F0G3PEiRZkUp72WnD_rqio-CSyConUALmEs5lOoLw7B8"/>
+</a>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] text-white/20 font-black uppercase tracking-[0.4em]">
+<div>© 2024 Cyber-Emerald Infrastructure. Encrypted Connection.</div>
+<div class="mt-8 md:mt-0 flex gap-10">
+<span class="text-spring-green/40">SOC-III Compliant</span>
+<span>P-SHA 512 Active</span>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>
