@@ -135,6 +135,10 @@ class ConsistencyChecker:
                     parsed = pd.to_datetime(
                         sample_series, errors="coerce", infer_datetime_format=True
                     )
+                    # Align timezones to prevent comparison crashes
+                    if parsed.dt.tz is None:
+                        parsed = parsed.dt.localize('UTC')
+                    
                     future_mask = parsed > now
                     if future_mask.any():
                         col_issues.append("Temporal inconsistency: future dates detected.")

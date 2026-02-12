@@ -15,8 +15,9 @@ from app.models.dataset import Dataset
 from app.repositories.audit_report_repository import AuditReportRepository
 from app.repositories.column_profile_repository import ColumnProfileRepository
 from app.repositories.dataset_repository import DatasetRepository
+from app.schemas.dataset import DatasetStatusResponse
 from app.schemas.report import AuditReportResponse, ColumnProfileSchema
-from app.services.csv_processing_service import CsvChunkProcessor
+from app.services.data_processing_service import DataProcessor
 
 
 logger = logging.getLogger(__name__)
@@ -65,7 +66,7 @@ class AuditService:
         duplicate_detector = DuplicateDetector()
         anomaly_detector = AnomalyDetector()
 
-        processor = CsvChunkProcessor(dataset.storage_path)
+        processor = DataProcessor(dataset.storage_path)
 
         try:
             total_rows = 0
@@ -180,33 +181,64 @@ class AuditService:
                 columns_count,
             )
         except Exception as exc:
-            error_message = str(exc)
+            error_message = f"{type(exc).__name__}: {str(exc)}"
             logger.exception(
                 "Audit failed dataset_id=%s error=%s",
                 dataset_id,
                 error_message,
             )
-            await self._dataset_repo.update_status(dataset_id, "failed")
-            # Persist a failed audit report with the error message for visibility.
-            await self._report_repo.upsert_report(
-                dataset_id=dataset_id,
-                reliability_score=0.0,
-                status="failed",
-                issue_summary={"error": error_message},
-                anomaly_count=0,
-                duplicate_count=0,
-                recommendations=[],
-                error_message=error_message,
-                is_sampled=False,
-                sample_size=0,
-            )
-            raise
+            try:
+                await self._dataset_repo.update_status(dataset_id, "failed")
+                # Persist a failed audit report with the error message for visibility.
+                await self._report_repo.upsert_report(
+                    dataset_id=dataset_id,
+                    reliability_score=0.0,
+                    status="failed",
+                    issue_summary={"error": error_message, "phase": "processing"},
+                    anomaly_count=0,
+                    duplicate_count=0,
+                    recommendations=["System error during analysis. Check logs."],
+                    error_message=error_message,
+                    is_sampled=False,
+                    sample_size=0,
+                )
+            except Exception as db_exc:
+                logger.error("Failed to update dataset status to failed: %s", db_exc)
+            
+            # We do NOT raise here to avoid crashing the background task runner wrapper if any.
+            # But normally logic dictates we might want to let it bubble up. 
+            # Given the user wants "graceful handle", swallowing here but ensuring DB is updated is better.
+            return
 
     async def get_dataset_status(self, dataset_id: str) -> Dataset:
         dataset = await self._dataset_repo.get_by_id(dataset_id)
         if dataset is None:
             raise ValueError("Dataset not found")
         return dataset
+
+    async def list_datasets(self, limit: int = 20) -> list[DatasetStatusResponse]:
+        datasets = await self._dataset_repo.list_all(limit=limit)
+        # We need to check if there are reports to get error_messages for failed ones
+        results = []
+        for ds in datasets:
+            error_msg = None
+            if ds.status == "failed":
+                report = await self._report_repo.get_by_dataset_id(str(ds.id))
+                if report:
+                    error_msg = report.error_message
+            
+            results.append(DatasetStatusResponse(
+                dataset_id=str(ds.id),
+                name=ds.name,
+                filename=ds.filename,
+                status=ds.status,
+                rows=ds.rows,
+                columns=ds.columns,
+                error_message=error_msg,
+                uploaded_at=ds.uploaded_at,
+                processed_at=ds.processed_at,
+            ))
+        return results
 
     async def get_audit_report(self, dataset_id: str) -> Optional[AuditReportResponse]:
         report = await self._report_repo.get_by_dataset_id(dataset_id)

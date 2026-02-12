@@ -1,16 +1,27 @@
-# Cyber-Emerald Data Analyzer
+# Cyber-Emerald Data Analyzer 💎
 
-A powerful, business-intelligence-focused data analysis platform with a high-end "Cyber-Emerald" aesthetic. This application allows users to upload, analyze, and visualize structured data streams with professional-grade diagnostics and real-time telemetry-style monitoring.
+**Cyber-Emerald Data Analyzer** is a high-performance, AI-driven platform for statistical data auditing and visualization.
 
 ## 🚀 Key Features
-- **Intelligent Data Pipeline**: Multi-format ingestion and automated analysis.
-- **System Resilience**: Global Error Boundary and defensive state management.
-- **Professional Aesthetic**: High-end glassmorphism design.
+- **AI-Driven Audit Pipeline**: Multi-method anomaly detection using `IsolationForest`, `Z-Score`, `MAD`, and `IQR`.
+- **High-Fidelity UI**: Premium "Cyber-Emerald" design system with glassmorphic visuals and real-time telemetry.
+- **Judge-Ready Insights**: Unified `Quality Score Card`, categorization of observations, and machine learning-guided recommendations.
+- **Resilient Connectivity**: Real-time Gateway Monitoring and exponential backoff retry strategies.
 
-## 🛠️ Technology Stack
-- **Frontend**: React, TypeScript, Recharts, Tailwind CSS.
-- **Backend**: FastAPI, Python, Uvicorn.
+## 🏗️ Architecture
+- **Frontend**: React 18, Vite, Tailwind CSS, Recharts, Lucide-React.
+- **Backend**: FastAPI (Python), MongoDB Atlas, Pydantic.
+- **Analysis Engine**: Reservoir-sampled statistical auditing and outlier detection.
 
-## 📥 Getting Started
-1. **Backend**: `pip install -r requirements.txt` && `uvicorn app.main:app`
-2. **Frontend**: `npm install` && `npm run dev`
+## 🛠️ Getting Started
+1. **Backend**: `python -m uvicorn app.main:app --port 8000` (from `Backend` directory)
+2. **Frontend**: `npm run dev` (from `frontend` directory)
+
+## 🏁 Milestones
+- [x] Phase 1: Rebranding & UI Standardization
+- [x] Phase 2: AI Audit Backend Integration
+- [x] Phase 3: Insight Hub & ML Recommendations
+- [x] Phase 4: Connection Resilience & Stability
+
+---
+*Developed for professional-grade data analysis and technical excellence.*

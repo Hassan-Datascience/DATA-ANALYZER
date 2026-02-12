@@ -29,12 +29,14 @@ class UploadService:
 
         return UploadResponse(
             dataset_id=str(dataset.id),
+            report_id=str(dataset.id),  # Sync with user request for alias
             name=dataset.name or dataset.filename,
             filename=dataset.filename,
             rows=dataset.rows or 0,
             columns=dataset.columns or 0,
             file_size_bytes=dataset.file_size,
             status=dataset.status,
+            error_message=None,
             created_at=dataset.uploaded_at,
         )
 

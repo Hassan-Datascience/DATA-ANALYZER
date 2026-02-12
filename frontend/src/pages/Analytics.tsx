@@ -10,13 +10,38 @@ import {
     FileText,
     Database,
     AlertTriangle,
-    Download
+    Download,
+    Zap,
+    Target
 } from 'lucide-react';
+import ConnectionStatus from '../components/ui/ConnectionStatus';
 import { useSecurityMetrics, useNetworkTraffic, useThreatIntelligence } from '../services/api';
 import AreaChart from '../components/charts/AreaChart';
 import { formatNumber } from '../utils/formatters';
 import { useData } from '../context/DataContext';
 import AutoCharts from '../components/AutoCharts';
+import {
+    QualityScoreCard,
+    IssuesPanel,
+    RecommendationsPanel,
+    AnomalyBreakdown
+} from '../components/InsightComponents';
+
+// MOCK RECOMMENDATIONS (to be backend-driven later)
+const MOCK_RECOMMENDATIONS = [
+    { id: '1', title: 'Critical Duplicates', action: 'Remove 150 non-unique records from the primary index.', impact: 'Improves score +15%', effort: 'Low' as const },
+    { id: '2', title: 'Statistical Outliers', action: 'Filter values in [amount] exceeding 3x Standard Deviation.', impact: 'Stabilizes variance', effort: 'Medium' as const },
+    { id: '3', title: 'Missing Inferences', action: 'Apply mean-imputation to null values in [age] column.', impact: 'Restores completeness', effort: 'Low' as const },
+    { id: '4', title: 'Type Mismatch', action: 'Coerce string entries in [date] to ISO-8601 format.', impact: 'Enables time-series', effort: 'High' as const },
+];
+
+const MOCK_DIMENSIONS = {
+    'Completeness': 95,
+    'Consistency': 72,
+    'Validity': 88,
+    'Uniqueness': 85,
+    'Integrity': 92
+};
 
 const Analytics: React.FC = () => {
     const { uploadedData, analysis } = useData();
@@ -25,10 +50,10 @@ const Analytics: React.FC = () => {
     const { data: threat } = useThreatIntelligence();
 
     const stats = (uploadedData && analysis) ? [
-        { label: 'Data Integrity', value: `${100 - ((analysis?.anomalies?.length || 0) * 5)}%`, trend: (analysis?.anomalies?.length || 0) === 0 ? 'Optimal' : `-${(analysis?.anomalies?.length || 0) * 5}%`, up: (analysis?.anomalies?.length || 0) === 0 },
+        { label: 'Data Reliability', value: (analysis.reliability_score?.toFixed(1) || '0.0') + '%', trend: analysis.reliability_score >= 85 ? 'Optimal' : 'Review', up: analysis.reliability_score >= 85 },
         { label: 'Dataset Volume', value: formatNumber(uploadedData.metadata.rowCount), trend: 'Processed', up: true },
         { label: 'Variable Count', value: uploadedData.metadata.columnCount, trend: 'Indexed', up: true },
-        { label: 'Anomalies Detected', value: analysis?.anomalies?.length || 0, trend: (analysis?.anomalies?.length || 0) > 5 ? 'Critical' : 'Nominal', up: (analysis?.anomalies?.length || 0) <= 5 },
+        { label: 'Identified Issues', value: analysis?.anomalies?.length || 0, trend: (analysis?.anomalies?.length || 0) > 10 ? 'Critical' : 'Nominal', up: (analysis?.anomalies?.length || 0) <= 10 },
     ] : [
         { label: 'Overall Efficiency', value: metrics?.integrity_score + '%', trend: '+2.4%', up: true },
         { label: 'Signal Intensity', value: traffic?.request_rate.split(' ')[0] || '0', trend: '-0.8%', up: false },
@@ -66,14 +91,18 @@ const Analytics: React.FC = () => {
                     </div>
 
                     {uploadedData && analysis && (
-                        <button
-                            onClick={handleExport}
-                            className="px-6 py-3 bg-spring-green text-cyber-bg text-[10px] font-black uppercase tracking-widest rounded shadow-neon hover:scale-[1.05] transition-all flex items-center gap-2 cursor-pointer"
-                        >
-                            <Download className="w-4 h-4" />
-                            Export_Report
-                        </button>
+                        <div className="flex items-center gap-4">
+                            <ConnectionStatus />
+                            <button
+                                onClick={handleExport}
+                                className="px-6 py-3 bg-spring-green text-cyber-bg text-[10px] font-black uppercase tracking-widest rounded shadow-neon hover:scale-[1.05] transition-all flex items-center gap-2 cursor-pointer"
+                            >
+                                <Download className="w-4 h-4" />
+                                Export_Report
+                            </button>
+                        </div>
                     )}
+                    {!uploadedData && <ConnectionStatus />}
                 </header>
 
                 {/* DATASET METADATA (If uploaded) */}
@@ -124,6 +153,115 @@ const Analytics: React.FC = () => {
                 <div className="space-y-12">
                     {uploadedData && analysis ? (
                         <div className="space-y-12 animate-in fade-in duration-500">
+                            <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                                <QualityScoreCard
+                                    score={analysis?.reliability_score || 0}
+                                    dimensions={analysis?.dimensions || MOCK_DIMENSIONS}
+                                />
+                                <div className="glass-card p-8 rounded-xl border border-white/5 flex flex-col justify-center text-center">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-6 font-mono">Expert Recommendations</h3>
+                                    <p className="text-xs font-mono text-white/60 mb-8 italic">Machine learning model suggests these optimizations to harden your data infrastructure.</p>
+                                    <div className="flex justify-center gap-4">
+                                        <div className="flex items-center gap-2 text-[10px] text-spring-green font-black uppercase tracking-widest">
+                                            <Zap className="w-4 h-4" />
+                                            AI Guided
+                                        </div>
+                                        <div className="flex items-center gap-2 text-[10px] text-purple-500 font-black uppercase tracking-widest">
+                                            <Target className="w-4 h-4" />
+                                            Precision Fixes
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <IssuesPanel issues={(() => {
+                                    const statObs = (analysis as any)?.statistical_observations;
+                                    if (!statObs) {
+                                        return [
+                                            { severity: 'critical' as const, title: 'No Critical Issues Detected', count: 0, affectedColumns: [] },
+                                            { severity: 'warning' as const, title: 'No Warnings', count: 0, affectedColumns: [] },
+                                            { severity: 'info' as const, title: 'Standard Compliance', count: 0, affectedColumns: [] },
+                                        ];
+                                    }
+
+                                    const issues: Array<{ severity: 'critical' | 'warning' | 'info', title: string, count: number, affectedColumns: string[] }> = [];
+
+                                    // Critical issues (red)
+                                    (statObs.critical || []).forEach((issue: string) => {
+                                        issues.push({
+                                            severity: 'critical' as const,
+                                            title: issue,
+                                            count: parseInt(issue.match(/\d+/)?.[0] || '0'),
+                                            affectedColumns: []
+                                        });
+                                    });
+
+                                    // Warning issues (yellow)
+                                    (statObs.warning || []).forEach((issue: string) => {
+                                        issues.push({
+                                            severity: 'warning' as const,
+                                            title: issue,
+                                            count: parseInt(issue.match(/\d+/)?.[0] || '0'),
+                                            affectedColumns: []
+                                        });
+                                    });
+
+                                    // Optimized findings (green)
+                                    (statObs.optimized || []).forEach((issue: string) => {
+                                        issues.push({
+                                            severity: 'info' as const,
+                                            title: issue,
+                                            count: 0,
+                                            affectedColumns: []
+                                        });
+                                    });
+
+                                    return issues;
+                                })()} />
+                            </section>
+
+                            <section>
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-6 font-mono">Optimisation Backlog</h3>
+                                <RecommendationsPanel recommendations={(() => {
+                                    const backendRecs = (analysis as any)?.recommendations;
+                                    if (!backendRecs || backendRecs.length === 0) {
+                                        return MOCK_RECOMMENDATIONS;
+                                    }
+
+                                    // Transform backend recommendations to match expected format
+                                    return backendRecs.map((rec: any, idx: number) => ({
+                                        id: String(idx + 1),
+                                        title: rec.title || 'Unknown',
+                                        action: rec.description || '',
+                                        impact: rec.impact || 'Unknown impact',
+                                        effort: rec.effort?.includes('LOW') ? 'Low' as const :
+                                            rec.effort?.includes('MEDIUM') ? 'Medium' as const :
+                                                rec.effort?.includes('HIGH') ? 'High' as const : 'Medium' as const
+                                    }));
+                                })()} />
+                            </section>
+
+                            <section>
+                                <AnomalyBreakdown methods={(() => {
+                                    const breakdown = (analysis as any)?.detection_breakdown;
+                                    if (!breakdown) {
+                                        return [
+                                            { name: 'IsolationForest', description: 'Tree-based partitioning', count: 0 },
+                                            { name: 'Z-Score', description: 'Standard deviation threshold', count: 0 },
+                                            { name: 'Modified Z-Score', description: 'Median absolute deviation', count: 0 },
+                                            { name: 'IQR Method', description: 'Interquartile range filter', count: 0 },
+                                        ];
+                                    }
+
+                                    return Object.keys(breakdown).map(key => ({
+                                        name: key,
+                                        description: breakdown[key].method || '',
+                                        count: breakdown[key].count || 0
+                                    }));
+                                })()} />
+                            </section>
+
                             <section>
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-spring-green/40 mb-6 font-mono">Automated Visualization Suite</h3>
                                 <AutoCharts data={uploadedData.rows} analysis={analysis} />

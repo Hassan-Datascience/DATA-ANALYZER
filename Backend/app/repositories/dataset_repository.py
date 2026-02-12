@@ -68,6 +68,11 @@ class DatasetRepository:
             },
         )
 
+    async def list_all(self, limit: int = 20) -> list[Dataset]:
+        cursor = self._collection.find().sort("uploaded_at", -1).limit(limit)
+        docs = await cursor.to_list(length=limit)
+        return [self._document_to_model(doc) for doc in docs]
+
     def _document_to_model(self, doc: dict) -> Dataset:
         return Dataset(
             id=doc["_id"],

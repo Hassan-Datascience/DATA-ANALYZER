@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Upload, X, FileText, CheckCircle2, Loader2, Table as TableIcon } from 'lucide-react';
 import Modal from './Modal';
 import { parseFile, ParsedData } from '../../utils/fileParser';
-import { analyzeData } from '../../utils/dataAnalyzer';
 import { useData } from '../../context/DataContext';
+import * as api from '../../services/api';
 
 interface UploadModalProps {
     isOpen: boolean;
@@ -18,6 +18,10 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose }) => {
     const [isComplete, setIsComplete] = useState(false);
     const [previewData, setPreviewData] = useState<ParsedData | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [datasetId, setDatasetId] = useState<string | null>(null);
+
+    const { data: statusData, error: statusError } = api.useDatasetStatus(datasetId);
+    const { data: reportData } = api.useAuditReport(datasetId);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setError(null);
@@ -37,38 +41,79 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose }) => {
         }
     };
 
-    const handleUpload = () => {
+    const handleUpload = async () => {
         if (!file || !previewData) return;
         setIsUploading(true);
         setError(null);
+        setProgress(10);
 
-        // Simulate upload/analysis progress
-        let p = 0;
-        const interval = setInterval(() => {
-            p += Math.random() * 30;
-            if (p >= 100) {
-                p = 100;
-                clearInterval(interval);
+        try {
+            // 1. Upload
+            const uploadRes = await api.uploadDataset(file, file.name);
+            setDatasetId(uploadRes.dataset_id);
+            setProgress(40);
 
-                try {
-                    // Finalize data and analysis
-                    const analysisResults = analyzeData(previewData.rows, previewData.headers);
-                    setUploadedData(previewData);
-                    setAnalysis(analysisResults);
-
-                    setIsUploading(false);
-                    setIsComplete(true);
-                } catch (err) {
-                    setError("Analysis engine failed to process data structure.");
-                    setIsUploading(false);
-                }
-            }
-            setProgress(p);
-        }, 300);
+            // 2. Trigger Audit
+            await api.triggerAudit(uploadRes.dataset_id);
+            setProgress(60);
+        } catch (err: any) {
+            setError(err.message || "Ingestion protocol failure");
+            setIsUploading(false);
+        }
     };
+
+    // Polling effect for completion
+    React.useEffect(() => {
+        if (statusData?.status === 'failed') {
+            setError(statusData.error_message || "Analysis engine failure");
+            setIsUploading(false);
+            setProgress(0);
+        }
+        if (statusData?.status === 'completed' && reportData) {
+            setProgress(100);
+            setIsUploading(false);
+            setIsComplete(true);
+
+            // Integrate backend report back into context
+            // Mapping backend report to frontend expectation for compatibility
+            const mappedAnalysis = {
+                columns: reportData.columns.map(c => ({
+                    name: c.column_name,
+                    type: c.metrics?.inferred_type || 'unknown',
+                    stats: c.metrics || {},
+                    isTimeSeries: c.metrics?.inferred_type === 'datetime' || false
+                })),
+                totalRows: (statusData as any).rows || 0,
+                anomalies: reportData.columns.flatMap(c => c.issues || []),
+                suggestedCharts: ['Table', 'BarChart', 'LineChart'],
+                reliability_score: reportData.reliability_score || 0
+            };
+
+            if (previewData) {
+                setUploadedData({
+                    ...previewData,
+                    metadata: {
+                        ...previewData.metadata,
+                        rowCount: (statusData as any).rows || previewData.metadata.rowCount || 0,
+                        columnCount: (statusData as any).columns || previewData.metadata.columnCount || 0
+                    }
+                });
+                setAnalysis(mappedAnalysis as any);
+            } else {
+                console.error("Critical: Preview data lost during audit polling.");
+                setError("Local state lost. Please re-upload to synchronize.");
+                setIsUploading(false);
+            }
+        }
+        if (statusError) {
+            setError("Polling data link lost.");
+            setIsUploading(false);
+        }
+    }, [statusData, reportData, statusError, previewData, setUploadedData, setAnalysis]);
 
     const reset = () => {
         setFile(null);
+        setDatasetId(null);
         setIsUploading(false);
         setProgress(0);
         setIsComplete(false);

@@ -26,7 +26,12 @@ async def get_threat_intelligence():
     return {
         "drift_value": round(random.uniform(0.0, 0.1), 3),
         "drift_trend": [random.uniform(0, 1) for _ in range(15)],
-        "threat_level": random.randint(0, 20)
+        "threat_level": random.randint(0, 20),
+        "threat_list": [
+            {"vector": "BRUTE_FORCE_ATTEMPT", "origin": "192.168.1.45", "timestamp": "14:22:01", "severity": "HIGH"},
+            {"vector": "MALFORMED_PACKET_STORM", "origin": "10.0.4.12", "timestamp": "14:19:44", "severity": "CRITICAL"},
+            {"vector": "UNAUTHORIZED_API_QUERY", "origin": "LOCAL_NODE_7", "timestamp": "14:15:20", "severity": "MEDIUM"}
+        ]
     }
 
 @router.get("/compliance-status")

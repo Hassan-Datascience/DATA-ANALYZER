@@ -45,12 +45,14 @@ class DatasetSchema(DatasetBase):
 
 class UploadResponse(BaseModel):
     dataset_id: str
+    report_id: str  # Alias for frontend expectation
     name: str
     filename: str
     rows: int
     columns: int
     file_size_bytes: int
     status: DatasetStatusLiteral
+    error_message: Optional[str] = None
     created_at: datetime
 
 
@@ -61,6 +63,7 @@ class DatasetStatusResponse(BaseModel):
     status: DatasetStatusLiteral
     rows: Optional[int] = None
     columns: Optional[int] = None
+    error_message: Optional[str] = None
     uploaded_at: datetime
     processed_at: Optional[datetime] = None
 
