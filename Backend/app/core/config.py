@@ -36,10 +36,19 @@ class Settings(BaseSettings):
     reliability_weight_duplicate: float = 0.5
 
     # CORS
-    cors_allow_origins: List[AnyUrl] | List[str] = ["*"]
+    cors_allow_origins: List[str] = ["*"]
 
     # Logging
     log_level: str = "INFO"
+
+    @field_validator("cors_allow_origins", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: str | List[str]) -> List[str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
 
     @field_validator("csv_chunk_size")
     @classmethod
