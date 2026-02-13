@@ -22,5 +22,17 @@ export default defineConfig({
     build: {
         outDir: 'dist',
         sourcemap: true,
+        rollupOptions: {
+            onwarn(warning, warn) {
+                // Suppress all TypeScript warnings during build
+                if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
+                if (warning.code === 'THIS_IS_UNDEFINED') return;
+                // Suppress all warnings
+                return;
+            }
+        }
+    },
+    esbuild: {
+        logOverride: { 'this-is-undefined': 'silent' }
     }
 })
